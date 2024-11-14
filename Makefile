@@ -14,6 +14,15 @@ $(SERVER): &(OBJS)
 testReadFiles: ./test/01_testReadFiles.o ./src/DictProducer.o
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 
+testJieba: ./test/02_jiebaSplitCnEn.o
+	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
+
+cleanCn: ./test/03_cleanCnString.o ./src/DictProducer.o ./src/SplitToolCppJieba.o
+	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
+
+opendir: ./test/04_openDir.o
+	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
+
 echo:
 	echo $(INCLUDES)
 	echo $(SRCS)

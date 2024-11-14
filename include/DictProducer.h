@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include "SplitTool.h"
+
 using std::map;
 using std::pair;
 using std::set;
@@ -13,11 +15,12 @@ using std::string;
 using std::vector;
 
 class DictProducer {
+  const char* const CnDir = "../yuliao/art/";
   const char* const stopWordsEng = "../yuliao/stop_words_eng.txt";
+  const char* const stopWordsCn = "../yuliao/stop_words_zh.txt";
 
  public:
-  // DicProducer(string, tool);
-  DictProducer(string);
+  DictProducer(const string, SplitTool*);
   void buildEnDict();
   void buildCnDict();
   void createIndex();
@@ -26,6 +29,11 @@ class DictProducer {
  private:
   // 用于英文语料清洗的函数
   void cleanLine(string&);
+  // 用于中文语料清洗的函数
+  string cleanFileStr(const char*, size_t);
+
+  // 识别字符的字节数
+  size_t nBytesCode(const char);
 
  private:
   // 加载词典文件
@@ -38,7 +46,7 @@ class DictProducer {
   // map第一个参数是字母/汉字
   // map第二个参数是出现单词的索引集合，int保存的是单词的编号
   map<string, set<int>> _index;
-  // SplitTool *_cuttor;
+  SplitTool* _cuttor;
 };
 
 #endif  // !DICT_PRODUCER_H_
