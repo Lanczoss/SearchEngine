@@ -21,7 +21,7 @@ string Configuration::get_dp_config(const char* purpose, const char* key) {
   auto value = _settings["DictProducer"][purpose][key];
   if (value == nullptr) {
     cerr << "settings.json is not correct!\n";
-    return "";
+    return "wrong";
   } else {
     return value;
   }
