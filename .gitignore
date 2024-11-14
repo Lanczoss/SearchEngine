@@ -1,5 +1,9 @@
 # Prerequisites
 *.d
+dict.txt
+index.txt
+
+bin/
 
 # Compiled Object files
 *.slo
