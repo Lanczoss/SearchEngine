@@ -15,28 +15,29 @@ using std::ofstream;
 using std::unique_ptr;
 
 DictProducer::DictProducer(const string file, SplitTool *tool)
-    : _files(), _dict(), _index(), _cuttor(tool) {
+    : _files(), _dict(), _index(), _config(), _cuttor(tool) {
   // 遍历yuliao文件夹里的art文件夹的所有txt文件
   // 先用C3-Art0019.txt做测试
   // 第一个保证是英文文件
   // vector<string>后面的全部都是中文语料
   _files.push_back(file);
-  // _files.push_back("../yuliao/C3-Art0019.txt");
-  DIR *dirp = opendir(CnDir);
-  if (dirp == nullptr) {
-    perror("opendir");
-    return;
-  }
-  struct dirent *dp;
-  while ((dp = readdir(dirp)) != nullptr) {
-    if (strcmp(dp->d_name, ".") == 0 || strcmp(dp->d_name, "..") == 0) {
-    } else {
-      // cout << "filename = " << dp->d_name << "\n";
-      //
-      _files.push_back(CnDir + string(dp->d_name));
-    }
-  }
-  closedir(dirp);
+  _files.push_back("../yuliao/C3-Art0019.txt");
+  // DIR *dirp =
+  // opendir(_config->get_config(string("chinese_yuliao_diractory"))); if (dirp
+  // == nullptr) {
+  //   perror("opendir");
+  //   return;
+  // }
+  // struct dirent *dp;
+  // while ((dp = readdir(dirp)) != nullptr) {
+  //   if (strcmp(dp->d_name, ".") == 0 || strcmp(dp->d_name, "..") == 0) {
+  //   } else {
+  //     // cout << "filename = " << dp->d_name << "\n";
+  //     //
+  //     _files.push_back(CnDir + string(dp->d_name));
+  //   }
+  // }
+  // closedir(dirp);
 }
 
 void DictProducer::buildEnDict() {
@@ -47,7 +48,7 @@ void DictProducer::buildEnDict() {
   }
 
   // 读取停用词文件
-  ifstream ifsStop(stopWordsEng);
+  ifstream ifsStop(_config->get_config("stop_words_eng"));
   if (!ifsStop.good()) {
     cerr << "open stop_words_eng failed!\n";
     return;

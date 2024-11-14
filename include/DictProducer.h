@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "Configuration.h"
 #include "SplitTool.h"
 
 using std::map;
@@ -15,8 +16,6 @@ using std::string;
 using std::vector;
 
 class DictProducer {
-  const char* const CnDir = "../yuliao/art/";
-  const char* const stopWordsEng = "../yuliao/stop_words_eng.txt";
   const char* const stopWordsCn = "../yuliao/stop_words_zh.txt";
 
  public:
@@ -46,6 +45,9 @@ class DictProducer {
   // map第一个参数是字母/汉字
   // map第二个参数是出现单词的索引集合，int保存的是单词的编号
   map<string, set<int>> _index;
+
+  // 工具类
+  Configuration* _config;
   SplitTool* _cuttor;
 };
 

@@ -1,0 +1,6 @@
+{
+  "DictProducer": {
+    "chinese_yuliao_diractory": "../yuliao/art/",
+    "stop_words_eng": "../yuliao/stop_words_eng.txt"
+  }
+}

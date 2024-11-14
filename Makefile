@@ -17,7 +17,7 @@ testReadFiles: ./test/01_testReadFiles.o ./src/DictProducer.o
 testJieba: ./test/02_jiebaSplitCnEn.o
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 
-cleanCn: ./test/03_cleanCnString.o ./src/DictProducer.o ./src/SplitToolCppJieba.o
+cleanCn: ./test/03_cleanCnString.o ./src/DictProducer.o ./src/SplitToolCppJieba.o ./src/Configuration.o
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 
 opendir: ./test/04_openDir.o
