@@ -16,10 +16,8 @@ using std::string;
 using std::vector;
 
 class DictProducer {
-  const char* const stopWordsCn = "../yuliao/stop_words_zh.txt";
-
  public:
-  DictProducer(const string, SplitTool*);
+  DictProducer(const string, Configuration*, SplitTool*);
   void buildEnDict();
   void buildCnDict();
   void createIndex();

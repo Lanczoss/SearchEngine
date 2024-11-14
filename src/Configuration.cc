@@ -1,12 +1,9 @@
 #include "Configuration.h"
 
-#include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <memory>
 using std::cerr;
 using std::ifstream;
-using std::unique_ptr;
 
 Configuration::Configuration() : _settings() {
   ifstream ifs(configFile);
@@ -14,19 +11,17 @@ Configuration::Configuration() : _settings() {
     cerr << "open settings.json failed!\n";
     return;
   }
-  auto fileSize = std::filesystem::file_size(configFile);
-  unique_ptr<char[]> filePtr(new char[fileSize + 1]());
-  ifs.read(filePtr.get(), fileSize);
-  _settings = nlohmann::json::parse(filePtr.get());
+  // cerr << filePtr.get() << "\n";
+  _settings = nlohmann::json::parse(ifs);
+  // cerr << _settings.dump();
   ifs.close();
 }
 
-string Configuration::get_config(const char* key) {
-  string value = _settings["DictProducer"][key];
-  cerr << value << "\n";
-  if (value == "") {
-    cerr << "settings.json is not complete!\n";
-    return "1";
+string Configuration::get_dp_config(const char* purpose, const char* key) {
+  auto value = _settings["DictProducer"][purpose][key];
+  if (value == nullptr) {
+    cerr << "settings.json is not correct!\n";
+    return "";
   } else {
     return value;
   }

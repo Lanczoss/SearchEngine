@@ -11,7 +11,7 @@ class Configuration {
 
  public:
   Configuration();
-  string get_config(const char* key);
+  string get_dp_config(const char* purpose, const char* key);
 
  private:
   nlohmann::json _settings;

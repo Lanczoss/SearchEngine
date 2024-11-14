@@ -1,10 +1,15 @@
 #include "SplitToolCppJieba.h"
 
-SplitToolCppJieba::SplitToolCppJieba()
-    : jieba(DICT_PATH, HMM_PATH, USER_DICT_PATH, IDF_PATH, STOP_WORD_PATH) {}
+SplitToolCppJieba::SplitToolCppJieba(Configuration* config)
+    : _config(config),
+      _jieba(_config->get_dp_config("jieba", "dict"),
+             _config->get_dp_config("jieba", "hmm"),
+             _config->get_dp_config("jieba", "user"),
+             _config->get_dp_config("jieba", "idf"),
+             _config->get_dp_config("jieba", "stop")) {}
 
 vector<string> SplitToolCppJieba::cut(string sentence) {
   vector<string> words;
-  jieba.Cut(sentence, words, true);
+  _jieba.Cut(sentence, words, true);
   return words;
 }

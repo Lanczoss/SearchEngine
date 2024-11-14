@@ -2,8 +2,9 @@
 #include "SplitToolCppJieba.h"
 
 int main() {
-  SplitToolCppJieba jieba;
-  DictProducer dp("../yuliao/english.txt", &jieba);
+  Configuration config;
+  SplitToolCppJieba jieba(&config);
+  DictProducer dp("../yuliao/english.txt", &config, &jieba);
   dp.buildEnDict();
   dp.buildCnDict();
   dp.createIndex();

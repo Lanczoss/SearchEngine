@@ -1,6 +1,23 @@
 {
   "DictProducer": {
-    "chinese_yuliao_diractory": "../yuliao/art/",
-    "stop_words_eng": "../yuliao/stop_words_eng.txt"
+    "yuliao": {
+      "chinese.directory": "../yuliao/art/",
+      "english": "../yuliao/english.txt"
+    },
+    "stop": {
+      "chinese": "../yuliao/stop_words_zh.txt",
+      "english": "../yuliao/stop_words_eng.txt"
+    },
+    "save": {
+      "dict": "../dict/dict.txt",
+      "index": "../dict/index.txt"
+    },
+    "jieba": {
+      "dict": "../dict/jieba.dict.utf8",
+      "hmm": "../dict/hmm_model.utf8",
+      "user": "../dict/user.dict.utf8",
+      "idf": "../dict/idf.utf8",
+      "stop": "../dict/stop_words.utf8"
+    }
   }
 }

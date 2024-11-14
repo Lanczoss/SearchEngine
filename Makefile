@@ -11,18 +11,20 @@ $(SERVER): &(OBJS)
 %.o:%.cc
 	g++ -c $^ -o $@  $(addprefix -I, $(INCLUDES)) -g
 
-testReadFiles: ./test/01_testReadFiles.o ./src/DictProducer.o
+testReadFiles.exe: ./test/01_testReadFiles.o ./src/DictProducer.o
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 
-testJieba: ./test/02_jiebaSplitCnEn.o
+testJieba.exe: ./test/02_jiebaSplitCnEn.o
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 
-cleanCn: ./test/03_cleanCnString.o ./src/DictProducer.o ./src/SplitToolCppJieba.o ./src/Configuration.o
+cleanCn.exe: ./test/03_cleanCnString.o ./src/DictProducer.o ./src/SplitToolCppJieba.o ./src/Configuration.o
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 
-opendir: ./test/04_openDir.o
+opendir.exe: ./test/04_openDir.o
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 
+05_config.exe: ./test/05_config.o ./src/Configuration.o
+	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 echo:
 	echo $(INCLUDES)
 	echo $(SRCS)

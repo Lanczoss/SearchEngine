@@ -14,30 +14,32 @@ using std::istringstream;
 using std::ofstream;
 using std::unique_ptr;
 
-DictProducer::DictProducer(const string file, SplitTool *tool)
-    : _files(), _dict(), _index(), _config(), _cuttor(tool) {
+DictProducer::DictProducer(const string file, Configuration *config,
+                           SplitTool *tool)
+    : _files(), _dict(), _index(), _config(config), _cuttor(tool) {
   // 遍历yuliao文件夹里的art文件夹的所有txt文件
   // 先用C3-Art0019.txt做测试
   // 第一个保证是英文文件
   // vector<string>后面的全部都是中文语料
   _files.push_back(file);
-  _files.push_back("../yuliao/C3-Art0019.txt");
-  // DIR *dirp =
-  // opendir(_config->get_config(string("chinese_yuliao_diractory"))); if (dirp
-  // == nullptr) {
-  //   perror("opendir");
-  //   return;
-  // }
-  // struct dirent *dp;
-  // while ((dp = readdir(dirp)) != nullptr) {
-  //   if (strcmp(dp->d_name, ".") == 0 || strcmp(dp->d_name, "..") == 0) {
-  //   } else {
-  //     // cout << "filename = " << dp->d_name << "\n";
-  //     //
-  //     _files.push_back(CnDir + string(dp->d_name));
-  //   }
-  // }
-  // closedir(dirp);
+  // _files.push_back("../yuliao/C3-Art0019.txt");
+  string chineseYuliao = _config->get_dp_config("yuliao", "chinese.directory");
+  // cerr << chineseYuliao;
+  DIR *dirp = opendir(chineseYuliao.c_str());
+  if (dirp == nullptr) {
+    perror("opendir");
+    return;
+  }
+  struct dirent *dp;
+  while ((dp = readdir(dirp)) != nullptr) {
+    if (strcmp(dp->d_name, ".") == 0 || strcmp(dp->d_name, "..") == 0) {
+    } else {
+      // cout << "filename = " << dp->d_name << "\n";
+      //
+      _files.push_back(chineseYuliao + string(dp->d_name));
+    }
+  }
+  closedir(dirp);
 }
 
 void DictProducer::buildEnDict() {
@@ -48,7 +50,7 @@ void DictProducer::buildEnDict() {
   }
 
   // 读取停用词文件
-  ifstream ifsStop(_config->get_config("stop_words_eng"));
+  ifstream ifsStop(_config->get_dp_config("stop", "english"));
   if (!ifsStop.good()) {
     cerr << "open stop_words_eng failed!\n";
     return;
@@ -98,7 +100,7 @@ void DictProducer::buildCnDict() {
   // 从_files的第二个元素开始（下标为1）全都是中文语料
   // 测试时只有一个文件
   // 读取中文停用词文件
-  ifstream ifsStop(stopWordsCn);
+  ifstream ifsStop(_config->get_dp_config("stop", "chinese"));
   if (!ifsStop.good()) {
     cerr << "open stop_words_cn failed!\n";
     return;
@@ -139,12 +141,11 @@ void DictProducer::buildCnDict() {
     //   "\n";
     // }
 
-    // 词频统计后转为vector
-    for (auto &w : dictInt) {
-      _dict.push_back(std::make_pair(w.first, w.second));
-    }
-
     ifs.close();
+  }
+  // 词频统计后转为vector
+  for (auto &w : dictInt) {
+    _dict.push_back(std::make_pair(w.first, w.second));
   }
 }
 
@@ -213,7 +214,7 @@ void DictProducer::createIndex() {
 
 void DictProducer::store() {
   // 词典的持久化存储
-  ofstream dofs("../dict/dict.txt");
+  ofstream dofs(_config->get_dp_config("save", "dict"));
   if (!dofs) {
     cerr << "create dict.txt failed!";
     return;
@@ -224,7 +225,7 @@ void DictProducer::store() {
   }
 
   // 单词位置索引的持久化存储
-  ofstream iofs("../dict/index.txt");
+  ofstream iofs(_config->get_dp_config("save", "index"));
   if (!iofs) {
     cerr << "create index.txt failed!";
     return;
