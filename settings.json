@@ -1,5 +1,5 @@
 {
-  "DictProducer": {
+  "dict.producer": {
     "yuliao": {
       "chinese.directory": "../yuliao/art/",
       "english": "../yuliao/english.txt"
@@ -18,6 +18,16 @@
       "user": "../dict/user.dict.utf8",
       "idf": "../dict/idf.utf8",
       "stop": "../dict/stop_words.utf8"
+    }
+  },
+  "network": {
+    "tcp": {
+      "ip": "127.0.0.1",
+      "port": "12345"
+    },
+    "pool": {
+      "number": "4",
+      "queue.size": "10"
     }
   }
 }

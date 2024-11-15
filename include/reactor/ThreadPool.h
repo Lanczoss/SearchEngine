@@ -14,7 +14,7 @@ class ThreadPool {
  public:
   using ElemType = Task;
 
-  ThreadPool(size_t, size_t);
+  ThreadPool(size_t threadNum, size_t queueSize);
   ~ThreadPool();
   void start();
   void stop();

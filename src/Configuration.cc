@@ -37,7 +37,7 @@ Configuration::Configuration(const string& configFilePath)
 }
 
 string Configuration::dp(const char* purpose, const char* key) {
-  auto value = _settings["DictProducer"][purpose][key];
+  auto value = _settings["dict.producer"][purpose][key];
   if (value == nullptr) {
     cerr << "settings.json is not correct!\n";
     return "wrong";
@@ -68,4 +68,14 @@ void Configuration::init(const string& configFilePath) {
   _settings = nlohmann::json::parse(ifs);
   // cerr << _settings.dump();
   ifs.close();
+}
+
+string Configuration::network(const char* purpose, const char* key) {
+  auto value = _settings["network"][purpose][key];
+  if (value == nullptr) {
+    cerr << "settings.json is not correct!\n";
+    return "wrong";
+  } else {
+    return value;
+  }
 }

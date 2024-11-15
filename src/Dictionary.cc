@@ -114,7 +114,7 @@ void Dictionary::init() {
 // 词频和相似度共同构成vector<string>
 vector<CandidateResult> Dictionary::doQuery(const string& inputWord) {
   // 首先得到共同拥有inputWord的_index
-  // 这里取需要是并集
+  // 这里取需要是交集
   // set<int> unionSet;
   vector<int> unionSet;
   queryIndex(unionSet, inputWord);
@@ -126,24 +126,25 @@ vector<CandidateResult> Dictionary::doQuery(const string& inputWord) {
   for (auto& index : unionSet) {
     sortFrequency.push_back(_dict[index]);
   }
-  std::sort(sortFrequency.begin(), sortFrequency.end(),
-            [inputWord, this](const pair<string, int>& lhs,
-                              const pair<string, int>& rhs) {
-              // 先算相似度
-              int dlhs = distance(inputWord, lhs.first);
-              int drhs = distance(inputWord, rhs.first);
-              // cerr << "dlhs = " << dlhs << "\n";
-              // cerr << "drhs = " << drhs << "\n";
-              if (dlhs != drhs) {
-                return dlhs < drhs;
-              } else {
-                // 如果相似度相等，用词频排序
-                return lhs.second > rhs.second;
-              }
-            });
-
+  if (sortFrequency.size() > 1) {
+    std::sort(sortFrequency.begin(), sortFrequency.end(),
+              [inputWord, this](const pair<string, int>& lhs,
+                                const pair<string, int>& rhs) {
+                // 先算相似度
+                int dlhs = distance(inputWord, lhs.first);
+                int drhs = distance(inputWord, rhs.first);
+                // cerr << "dlhs = " << dlhs << "\n";
+                // cerr << "drhs = " << drhs << "\n";
+                if (dlhs != drhs) {
+                  return dlhs < drhs;
+                } else {
+                  // 如果相似度相等，用词频排序
+                  return lhs.second > rhs.second;
+                }
+              });
+  }
   vector<CandidateResult> readyVt;
-  for (size_t idx = 0; idx < 10; ++idx) {
+  for (size_t idx = 0; idx < 10 && idx < sortFrequency.size(); ++idx) {
     CandidateResult cr(sortFrequency[idx].first, sortFrequency[idx].second,
                        distance(inputWord, sortFrequency[idx].first));
     readyVt.push_back(cr);

@@ -13,6 +13,7 @@ class Configuration {
  public:
   static Configuration* getInstance();
   string dp(const char* purpose, const char* key);
+  string network(const char* purpose, const char* key);
   void init(const string& configFilePath);
 
  private:
