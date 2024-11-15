@@ -148,7 +148,7 @@ vector<CandidateResult> Dictionary::doQuery(const string& inputWord) {
                        distance(inputWord, sortFrequency[idx].first));
     readyVt.push_back(cr);
   }
-  showReadyVt(readyVt);
+  // showReadyVt(readyVt);
   return readyVt;
 }
 

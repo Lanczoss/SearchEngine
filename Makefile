@@ -29,7 +29,7 @@ $(SERVER): &(OBJS)
 07_readDictAndIndex.exe: ./test/07_readDictAndIndex.o ./src/Configuration.o ./src/DictProducer.o ./src/Dictionary.o ./src/SplitToolCppJieba.o ./src/SplitTool.o
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 
-08_unionSet.exe: ./test/08_unionSet.o ./src/Configuration.o ./src/DictProducer.o ./src/Dictionary.o ./src/SplitToolCppJieba.o ./src/SplitTool.o ./src/CandidateResult.o
+08_unionSet.exe: ./test/08_unionSet.o ./src/Configuration.o ./src/DictProducer.o ./src/Dictionary.o ./src/SplitToolCppJieba.o ./src/SplitTool.o ./src/CandidateResult.o ./src/KeyRecommander.o
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 
 09_minEditDist.exe: ./test/09_minEditDist.o
