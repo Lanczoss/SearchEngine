@@ -17,7 +17,7 @@ using std::vector;
 
 class DictProducer {
  public:
-  DictProducer(const string, Configuration*, SplitTool*);
+  DictProducer(const string, SplitTool*);
   void buildEnDict();
   void buildCnDict();
   void createIndex();
@@ -45,7 +45,6 @@ class DictProducer {
   map<string, set<int>> _index;
 
   // 工具类
-  Configuration* _config;
   SplitTool* _cuttor;
 };
 

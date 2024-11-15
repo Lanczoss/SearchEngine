@@ -3,8 +3,9 @@
 #include "Configuration.h"
 using std::cout;
 int main() {
-  Configuration conf;
+  // Configuration::getInstance()->read_config("");
+  // Configuration::read_config("../settings.json");
 
-  cout << conf.get_dp_config("yuliao", "chinese.directory") << '\n';
-  cout << conf.get_dp_config("stop", "english") << '\n';
+  cout << Configuration::get_dp_config("yuliao", "chinese.directory") << '\n';
+  cout << Configuration::get_dp_config("stop", "english") << '\n';
 }

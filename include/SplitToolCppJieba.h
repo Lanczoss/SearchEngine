@@ -7,11 +7,10 @@
 
 class SplitToolCppJieba : public SplitTool {
  public:
-  SplitToolCppJieba(Configuration*);
+  SplitToolCppJieba();
   vector<string> cut(string) override;
 
  private:
-  Configuration* _config;
   cppjieba::Jieba _jieba;
 };
 
