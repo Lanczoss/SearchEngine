@@ -15,6 +15,8 @@ class Configuration {
   static string get_dp_config(const char* purpose, const char* key);
 
  private:
+  Configuration();
+  ~Configuration();
   static void initReady();
   Configuration(const string configFilePath);
   // 禁止拷贝构造和赋值

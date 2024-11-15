@@ -15,6 +15,8 @@ Configuration* Configuration::getInstance() {
   return _pInstance;
 }
 
+Configuration::~Configuration() {}
+
 void Configuration::initReady() {
   _settings = new nlohmann::json();
   _pInstance = new Configuration("../settings.json");

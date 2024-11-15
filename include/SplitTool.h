@@ -8,6 +8,8 @@ using std::vector;
 
 class SplitTool {
  public:
+  SplitTool();
+  virtual ~SplitTool();
   virtual vector<string> cut(string) = 0;
 };
 

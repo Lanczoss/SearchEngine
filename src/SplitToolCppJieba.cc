@@ -1,7 +1,8 @@
 #include "SplitToolCppJieba.h"
 
 SplitToolCppJieba::SplitToolCppJieba()
-    : _jieba(Configuration::get_dp_config("jieba", "dict"),
+    : SplitTool(),
+      _jieba(Configuration::get_dp_config("jieba", "dict"),
              Configuration::get_dp_config("jieba", "hmm"),
              Configuration::get_dp_config("jieba", "user"),
              Configuration::get_dp_config("jieba", "idf"),
