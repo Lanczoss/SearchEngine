@@ -7,6 +7,8 @@
 #include <set>
 #include <string>
 #include <vector>
+
+#include "CandidateResult.h"
 using std::map;
 using std::pair;
 using std::set;
@@ -16,14 +18,20 @@ using std::vector;
 class Dictionary {
  public:
   static Dictionary *getInstance();
-  vector<string> doQuery(const string &);
+  vector<CandidateResult> doQuery(const string &);
   void init();
 
  private:
-  void queryIndex();
-  int distance(string candidate);
+  void queryIndex(vector<int> &, const string &);
+  int distance(const string &inputWord, const string &candidate);
+  int triple_min(const int &, const int &, const int &);
+
   void showDict();
   void showIndex();
+  void showReadyVt(vector<CandidateResult> &);
+
+  size_t nBytesCode(const char);
+  void showUnion(vector<int> &);
 
  private:
   Dictionary();

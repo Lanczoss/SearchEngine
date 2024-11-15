@@ -14,14 +14,14 @@ using std::istringstream;
 using std::ofstream;
 using std::unique_ptr;
 
-DictProducer::DictProducer(const string file, SplitTool *tool)
+DictProducer::DictProducer(const string &config, SplitTool *tool)
     : _files(), _dict(), _index(), _cuttor(tool) {
-  Configuration::getInstance();
+  Configuration::getInstance()->init(config);
   // 遍历yuliao文件夹里的art文件夹的所有txt文件
   // 先用C3-Art0019.txt做测试
   // 第一个保证是英文文件
   // vector<string>后面的全部都是中文语料
-  _files.push_back(file);
+  _files.push_back(Configuration::getInstance()->dp("yuliao", "english"));
   // _files.push_back("../yuliao/C3-Art0019.txt");
   string chineseYuliao =
       Configuration::getInstance()->dp("yuliao", "chinese.directory");

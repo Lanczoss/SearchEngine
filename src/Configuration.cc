@@ -23,7 +23,7 @@ void Configuration::initReady() {
   atexit(destory);
 }
 
-Configuration::Configuration(const string configFilePath)
+Configuration::Configuration(const string& configFilePath)
     : _configFilePath(configFilePath) {
   ifstream ifs(_configFilePath);
   if (!ifs.good()) {
@@ -55,4 +55,17 @@ void Configuration::destory() {
   //   delete _settings;
   //   _settings = nullptr;
   // }
+}
+
+void Configuration::init(const string& configFilePath) {
+  _configFilePath = configFilePath;
+  ifstream ifs(_configFilePath);
+  if (!ifs.good()) {
+    cerr << "open settings.json failed!\n";
+    return;
+  }
+  // cerr << filePtr.get() << "\n";
+  _settings = nlohmann::json::parse(ifs);
+  // cerr << _settings.dump();
+  ifs.close();
 }

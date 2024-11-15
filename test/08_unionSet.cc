@@ -11,4 +11,5 @@ int main() {
   dp.store();
 
   Dictionary::getInstance()->init();
+  Dictionary::getInstance()->doQuery("中国hello");
 }
