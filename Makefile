@@ -43,7 +43,7 @@ $(SERVER): &(OBJS)
 09_minEditDist.exe: ./test/09_minEditDist.o
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 
-10_llhttp.exe: ./test/10_llhttp.o ./src/llhttp/llhttp.o ./src/llhttp/api.o ./src/llhttp/http.o
+10_llhttp.exe: ./test/10_llhttp.o ./src/llhttp/llhttp.o ./src/llhttp/api.o ./src/llhttp/http.o ./src/ProtocolParser.o
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 
 echo:
