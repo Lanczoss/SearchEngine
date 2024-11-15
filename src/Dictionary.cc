@@ -19,8 +19,9 @@ Dictionary* Dictionary::getInstance() {
 }
 
 void Dictionary::initReady() {
-  _pInstance = new Dictionary(Configuration::get_dp_config("save", "dict"),
-                              Configuration::get_dp_config("save", "index"));
+  _pInstance =
+      new Dictionary(Configuration::getInstance()->dp("save", "dict"),
+                     Configuration::getInstance()->dp("save", "index"));
   atexit(destory);
 }
 

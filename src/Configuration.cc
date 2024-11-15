@@ -6,7 +6,7 @@ using std::cerr;
 using std::ifstream;
 
 // 对静态数据成员的定义
-nlohmann::json* Configuration::_settings = nullptr;
+// nlohmann::json* Configuration::_settings = nullptr;
 Configuration* Configuration::_pInstance = getInstance();
 pthread_once_t Configuration::_once = PTHREAD_ONCE_INIT;
 
@@ -18,7 +18,7 @@ Configuration* Configuration::getInstance() {
 Configuration::~Configuration() {}
 
 void Configuration::initReady() {
-  _settings = new nlohmann::json();
+  // _settings = new nlohmann::json();
   _pInstance = new Configuration("../settings.json");
   atexit(destory);
 }
@@ -31,13 +31,13 @@ Configuration::Configuration(const string configFilePath)
     return;
   }
   // cerr << filePtr.get() << "\n";
-  *_settings = nlohmann::json::parse(ifs);
+  _settings = nlohmann::json::parse(ifs);
   // cerr << _settings.dump();
   ifs.close();
 }
 
-string Configuration::get_dp_config(const char* purpose, const char* key) {
-  auto value = (*_settings)["DictProducer"][purpose][key];
+string Configuration::dp(const char* purpose, const char* key) {
+  auto value = _settings["DictProducer"][purpose][key];
   if (value == nullptr) {
     cerr << "settings.json is not correct!\n";
     return "wrong";
@@ -51,8 +51,8 @@ void Configuration::destory() {
     delete _pInstance;
     _pInstance = nullptr;
   }
-  if (_settings) {
-    delete _settings;
-    _settings = nullptr;
-  }
+  // if (_settings) {
+  //   delete _settings;
+  //   _settings = nullptr;
+  // }
 }

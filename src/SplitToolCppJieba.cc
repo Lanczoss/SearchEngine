@@ -2,11 +2,11 @@
 
 SplitToolCppJieba::SplitToolCppJieba()
     : SplitTool(),
-      _jieba(Configuration::get_dp_config("jieba", "dict"),
-             Configuration::get_dp_config("jieba", "hmm"),
-             Configuration::get_dp_config("jieba", "user"),
-             Configuration::get_dp_config("jieba", "idf"),
-             Configuration::get_dp_config("jieba", "stop")) {}
+      _jieba(Configuration::getInstance()->dp("jieba", "dict"),
+             Configuration::getInstance()->dp("jieba", "hmm"),
+             Configuration::getInstance()->dp("jieba", "user"),
+             Configuration::getInstance()->dp("jieba", "idf"),
+             Configuration::getInstance()->dp("jieba", "stop")) {}
 
 vector<string> SplitToolCppJieba::cut(string sentence) {
   vector<string> words;

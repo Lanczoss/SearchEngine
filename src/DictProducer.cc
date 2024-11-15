@@ -24,7 +24,7 @@ DictProducer::DictProducer(const string file, SplitTool *tool)
   _files.push_back(file);
   // _files.push_back("../yuliao/C3-Art0019.txt");
   string chineseYuliao =
-      Configuration::get_dp_config("yuliao", "chinese.directory");
+      Configuration::getInstance()->dp("yuliao", "chinese.directory");
   // cerr << chineseYuliao;
   DIR *dirp = opendir(chineseYuliao.c_str());
   if (dirp == nullptr) {
@@ -49,14 +49,14 @@ DictProducer::DictProducer(const string file, SplitTool *tool)
 
 void DictProducer::buildEnDict() {
   ifstream ifs(_files.front());
-  if (!ifs.good()) {
+  if (!ifs) {
     cerr << "open english yuliao failed!\n";
     return;
   }
 
   // 读取停用词文件
-  ifstream ifsStop(Configuration::get_dp_config("stop", "english"));
-  if (!ifsStop.good()) {
+  ifstream ifsStop(Configuration::getInstance()->dp("stop", "english"));
+  if (!ifsStop) {
     cerr << "open stop_words_eng failed!\n";
     return;
   }
@@ -105,7 +105,7 @@ void DictProducer::buildCnDict() {
   // 从_files的第二个元素开始（下标为1）全都是中文语料
   // 测试时只有一个文件
   // 读取中文停用词文件
-  ifstream ifsStop(Configuration::get_dp_config("stop", "chinese"));
+  ifstream ifsStop(Configuration::getInstance()->dp("stop", "chinese"));
   if (!ifsStop.good()) {
     cerr << "open stop_words_cn failed!\n";
     return;
@@ -219,7 +219,7 @@ void DictProducer::createIndex() {
 
 void DictProducer::store() {
   // 词典的持久化存储
-  ofstream dofs(Configuration::get_dp_config("save", "dict"));
+  ofstream dofs(Configuration::getInstance()->dp("save", "dict"));
   if (!dofs) {
     cerr << "create dict.txt failed!";
     return;
@@ -230,7 +230,7 @@ void DictProducer::store() {
   }
 
   // 单词位置索引的持久化存储
-  ofstream iofs(Configuration::get_dp_config("save", "index"));
+  ofstream iofs(Configuration::getInstance()->dp("save", "index"));
   if (!iofs) {
     cerr << "create index.txt failed!";
     return;

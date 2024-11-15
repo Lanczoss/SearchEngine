@@ -12,7 +12,7 @@ using std::string;
 class Configuration {
  public:
   static Configuration* getInstance();
-  static string get_dp_config(const char* purpose, const char* key);
+  string dp(const char* purpose, const char* key);
 
  private:
   Configuration();
@@ -27,7 +27,7 @@ class Configuration {
 
  private:
   string _configFilePath;
-  static nlohmann::json* _settings;
+  nlohmann::json _settings;
   static Configuration* _pInstance;
   static pthread_once_t _once;
 };
