@@ -1,4 +1,4 @@
-INCLUDES:=./  ./include 
+INCLUDES:=./  ./include
 SRCS:=$(wildcard ./src/*.cc) 
 SRCSS:=$(wildcard ./src/**/*.cc) 
 TESTS:=$(wildcard ./test/*.cc) 
@@ -14,10 +14,10 @@ $(SERVER): &(OBJS)
 	g++ $^ -o $@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 	
 %.o:%.cc
-	g++ -c $^ -o $@  $(addprefix -I, $(INCLUDES)) -g
+	g++ -c $^ -o $@ $(addprefix -I, $(INCLUDES)) -g
 
 %.o:%.c
-	gcc -c $^ -o $@  $(addprefix -I, $(INCLUDES)) -g
+	gcc -c $^ -o $@ $(addprefix -I, $(INCLUDES)) -g
 
 01_testReadFiles.exe: ./test/01_testReadFiles.o ./src/DictProducer.o
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
@@ -44,6 +44,9 @@ $(SERVER): &(OBJS)
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 
 10_llhttp.exe: ./test/10_llhttp.o ./src/llhttp/llhttp.o ./src/llhttp/api.o ./src/llhttp/http.o ./src/ProtocolParser.o
+	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
+
+11_tinyxml2.exe: ./test/11_tinyxml2.o ./src/tinyxml2.o ./src/PageLib.o ./src/DirScanner.o ./src/Configuration.o
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 
 echo:

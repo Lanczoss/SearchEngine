@@ -20,6 +20,14 @@
       "stop": "../dict/stop_words.utf8"
     }
   },
+  "page": {
+    "yuliao": {
+      "directory": "../yuliao/xml"
+    },
+    "save": {
+      "page.lib": "../lib/page.txt"
+    }
+  },
   "network": {
     "tcp": {
       "ip": "127.0.0.1",

@@ -14,6 +14,7 @@ class Configuration {
   static Configuration* getInstance();
   string dp(const char* purpose, const char* key);
   string network(const char* purpose, const char* key);
+  string page(const char* purpose, const char* key);
   void init(const string& configFilePath);
 
  private:
