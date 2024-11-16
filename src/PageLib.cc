@@ -3,8 +3,9 @@
 #include "Configuration.h"
 
 using namespace tinyxml2;
+using std::ifstream;
+using std::ofstream;
 
-#include <fstream>
 #include <iostream>
 #include <regex>
 using std::cerr;
@@ -22,33 +23,50 @@ void PageLib::create() {
   cerr << "开始构建网页库\n";
   createWebLib();
   cerr << "构建网页库结束\n";
+
+  cerr << "开始构建网页偏移库\n";
+  createOffsetLib();
+  cerr << "构建网页偏移库结束\n";
+
+  showTwoPage();
 }
 
-void PageLib::store(PageMsg &pm) {
-  std::ofstream ofs(Configuration::getInstance()->page("save", "page.lib"),
-                    std::ios::app);
-  if (!ofs) {
-    cerr << "create/open page.lib failed!\n";
-    return;
-  }
+void PageLib::store(ofstream &ofs, PageMsg &pm, size_t &position) {
   ofs << "<doc>\n";
   ofs << "\t<docid>" << pm._docid << "</docid>\n";
   ofs << "\t<title>" << pm._title << "</title>\n";
   ofs << "\t<link>" << pm._link << "</link>\n";
   ofs << "\t<content>" << pm._content << "</content>\n";
   ofs << "</doc>\n";
-  ofs.close();
+  int pageLength = string(
+                       "<doc>\n\t<docid></docid>\n\t<title></title>\n\t<link></"
+                       "link>\n\t<content></content>\n</doc>\n")
+                       .size() +
+                   std::to_string(pm._docid).size() + pm._link.size() +
+                   pm._content.size() + pm._title.size();
+  _offsetLib[pm._docid] = std::make_pair(position, pageLength);
+  position += pageLength;
 }
 
 void PageLib::createWebLib() {
-  std::ofstream ofs(Configuration::getInstance()->page("save", "page.lib"));
+  // 刷新网页库文件
+  ofstream upofs(Configuration::getInstance()->page("save", "page.lib"));
+  if (!upofs) {
+    cerr << "create/open page.lib failed!\n";
+    return;
+  }
+  upofs.close();
+
+  // 追加模式
+  ofstream ofs(Configuration::getInstance()->page("save", "page.lib"),
+               std::ios::app);
   if (!ofs) {
     cerr << "create/open page.lib failed!\n";
     return;
   }
-  ofs.close();
 
   size_t docid = 0;
+  size_t position = 0;
   for (size_t idx = 0; idx < _pages.size(); ++idx) {
     PageMsg pm;
     XMLDocument xmlDocument;
@@ -75,11 +93,11 @@ void PageLib::createWebLib() {
           pm._content = node->FirstChildElement("description")->GetText();
         }
       }
-      if (pm._link == "" || pm._title == "" || pm._content == "") {
-        // cerr << "path = " << _pages[idx] << ", idx = " << idx << "\n";
-        node = node->NextSiblingElement("item");
-        continue;
-      }
+      // if (pm._link == "" || pm._title == "" || pm._content == "") {
+      //   // cerr << "path = " << _pages[idx] << ", idx = " << idx << "\n";
+      //   node = node->NextSiblingElement("item");
+      //   continue;
+      // }
 
       regexExecute(pm._content);
       regexExecute(pm._title);
@@ -90,7 +108,7 @@ void PageLib::createWebLib() {
         continue;
       }
 
-      store(pm);
+      store(ofs, pm, position);
       node = node->NextSiblingElement("item");
       docid++;
     }
@@ -124,4 +142,38 @@ void PageLib::regexExecute(string &input) {
 
   input = std::regex_replace(input, ltRegex, "&lt;");
   input = std::regex_replace(input, gtRegex, "&gt;");
+}
+
+void PageLib::createOffsetLib() {
+  // 创建偏移库
+  ofstream ofs(Configuration::getInstance()->page("save", "offset.lib"));
+  if (!ofs) {
+    cerr << "create offset.lib failed!\n";
+    return;
+  }
+
+  for (auto &offset : _offsetLib) {
+    ofs << offset.first << " " << offset.second.first << " "
+        << offset.second.second << '\n';
+  }
+
+  ofs.close();
+}
+
+void PageLib::showTwoPage() {
+  ifstream ifs(Configuration::getInstance()->page("save", "page.lib"));
+  if (!ifs) {
+    cerr << "open failed!\n";
+    return;
+  }
+  for (size_t idx = 0; idx < 3; ++idx) {
+    ifs.seekg(_offsetLib[idx].first);
+    int pageLength = _offsetLib[idx].second;
+    char *buff = new char[pageLength + 1]();
+    ifs.read(buff, pageLength);
+    cerr << buff;
+    delete[] buff;
+  }
+
+  ifs.close();
 }

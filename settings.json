@@ -25,7 +25,8 @@
       "directory": "../yuliao/xml"
     },
     "save": {
-      "page.lib": "../lib/page.txt"
+      "page.lib": "../lib/page.dat",
+      "offset.lib": "../lib/offset.dat"
     }
   },
   "network": {

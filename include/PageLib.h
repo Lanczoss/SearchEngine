@@ -1,7 +1,9 @@
 #ifndef PAGE_LIB_H_
 #define PAGE_LIB_H_
 
+#include <fstream>
 #include <map>
+using std::ofstream;
 
 #include "DirScanner.h"
 #include "tinyxml2.h"
@@ -22,9 +24,11 @@ class PageLib {
 
  private:
   void createWebLib();
+  void createOffsetLib();
   void regexExecute(string &);
+  void showTwoPage();
 
-  void store(PageMsg &);
+  void store(ofstream &, PageMsg &, size_t &);
 
  private:
   DirScanner _dirScanner;
