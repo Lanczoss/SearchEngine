@@ -49,6 +49,11 @@ $(SERVER): &(OBJS)
 11_tinyxml2.exe: ./test/11_tinyxml2.o ./src/tinyxml2.o ./src/PageLib.o ./src/DirScanner.o ./src/Configuration.o
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 
+12_webPage.exe: ./test/12_webPage.o ./src/WebPage.o ./src/tinyxml2.o
+	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
+
+13_pageDedup.exe: ./test/13_pageDedup.o ./src/WebPage.o ./src/PageLibPreprocessor.o ./src/Configuration.o ./src/tinyxml2.o
+	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 echo:
 	echo $(INCLUDES)
 	echo $(SRCS)

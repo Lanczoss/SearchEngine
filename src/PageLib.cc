@@ -17,9 +17,6 @@ void PageLib::create() {
   // 遍历_pages访问语料
   // 首先用tinyxml2进行清洗，生成新的网页库
   // 然后生成新的网页偏移库
-  // for (auto &path : _pages) {
-  //   cerr << "path = " << path << "\n";
-  // }
   cerr << "开始构建网页库\n";
   createWebLib();
   cerr << "构建网页库结束\n";
@@ -93,20 +90,15 @@ void PageLib::createWebLib() {
           pm._content = node->FirstChildElement("description")->GetText();
         }
       }
-      // if (pm._link == "" || pm._title == "" || pm._content == "") {
-      //   // cerr << "path = " << _pages[idx] << ", idx = " << idx << "\n";
-      //   node = node->NextSiblingElement("item");
-      //   continue;
-      // }
 
       regexExecute(pm._content);
       regexExecute(pm._title);
 
-      if (pm._link == "" || pm._title == "" || pm._content == "") {
-        // cerr << "path = " << _pages[idx] << ", idx = " << idx << "\n";
-        node = node->NextSiblingElement("item");
-        continue;
-      }
+      // if (pm._link == "" || pm._title == "" || pm._content == "" ) {
+      //   // cerr << "path = " << _pages[idx] << ", idx = " << idx << "\n";
+      //   node = node->NextSiblingElement("item");
+      //   continue;
+      // }
 
       store(ofs, pm, position);
       node = node->NextSiblingElement("item");
@@ -151,11 +143,10 @@ void PageLib::createOffsetLib() {
     cerr << "create offset.lib failed!\n";
     return;
   }
-
-  for (auto &offset : _offsetLib) {
-    ofs << offset.first << " " << offset.second.first << " "
-        << offset.second.second << '\n';
-  }
+  // for (auto &offset : _offsetLib) {
+  //   ofs << offset.first << " " << offset.second.first << " "
+  //       << offset.second.second << '\n';
+  // }
 
   ofs.close();
 }

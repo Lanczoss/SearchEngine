@@ -26,7 +26,9 @@
     },
     "save": {
       "page.lib": "../lib/page.dat",
-      "offset.lib": "../lib/offset.dat"
+      "offset.lib": "../lib/offset.dat",
+      "dpage.lib": "../lib/dpage.dat",
+      "doffset.lib": "../lib/doffset.dat"
     }
   },
   "network": {
