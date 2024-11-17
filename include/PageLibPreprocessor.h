@@ -27,13 +27,16 @@ struct EqualFringer {
 
 class PageLibPreprocessor {
  public:
-  PageLibPreprocessor();
+  PageLibPreprocessor(SplitTool *tool);
   void cutRedundantPage();
-  // void buildInvertIndexMap();
+  void buildInvertIndexMap();
   void storeOnDisk();
 
  private:
   void readOffsetLib();
+  double calWeight(const int &, const int &, const int &);
+  // 识别字符的字节数
+  size_t nBytesCode(const char);
 
  private:
   // 网络偏移库
@@ -41,9 +44,9 @@ class PageLibPreprocessor {
   // 去重网络库指纹
   unordered_set<uint64_t, std::hash<uint64_t>, EqualFringer> _pageLib;
   // 倒排索引
-  unordered_map<string, vector<pair<int, double>>> _invertIndexLib;
+  unordered_map<string, set<pair<int, double>>> _invertIndexLib;
   // jieba
-  // SplitTool *_wordCutter;
+  SplitTool *_wordCutter;
 };
 
 #endif  // !PAGE_LIB_PRE_PROCESSOR_H_

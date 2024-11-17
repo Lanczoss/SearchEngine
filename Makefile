@@ -52,7 +52,7 @@ $(SERVER): &(OBJS)
 12_webPage.exe: ./test/12_webPage.o ./src/WebPage.o ./src/tinyxml2.o
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 
-13_pageDedup.exe: ./test/13_pageDedup.o ./src/WebPage.o ./src/PageLibPreprocessor.o ./src/Configuration.o ./src/tinyxml2.o
+13_pageDedup.exe: ./test/13_pageDedup.o ./src/WebPage.o ./src/PageLibPreprocessor.o ./src/Configuration.o ./src/tinyxml2.o ./src/SplitToolCppJieba.o ./src/SplitTool.o
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 echo:
 	echo $(INCLUDES)

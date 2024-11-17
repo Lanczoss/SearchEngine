@@ -6,11 +6,12 @@ using std::string;
 
 class WebPage {
  public:
-  WebPage();
+  WebPage(const string &pagePath);
   int getDocID();
   string getDoc();
   string getDocContent();
   void clear();
+  size_t getPageLength();
 
   // 处理录入的文章
   void processDoc(const int &pos, const int &pageLength);
@@ -26,6 +27,8 @@ class WebPage {
   string _docURL;
   // 内容
   string _docContent;
+
+  string _pagePath;
 };
 
 #endif  // !WEB_PAGE_H_

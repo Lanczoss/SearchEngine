@@ -11,7 +11,13 @@ using namespace tinyxml2;
 using std::cerr;
 using std::unique_ptr;
 
-WebPage::WebPage() : _doc(), _docID(), _docTitle(), _docURL(), _docContent() {}
+WebPage::WebPage(const string &pagePath)
+    : _doc(),
+      _docID(),
+      _docTitle(),
+      _docURL(),
+      _docContent(),
+      _pagePath(pagePath) {}
 
 void WebPage::clear() {
   _doc.clear();
@@ -22,8 +28,7 @@ void WebPage::clear() {
 }
 
 void WebPage::processDoc(const int &pos, const int &pageLength) {
-  std::ifstream ifs(
-      Configuration::getInstance()->page("save", "page.lib").c_str());
+  std::ifstream ifs(_pagePath);
   if (!ifs) {
     cerr << "open page.dat failed!\n";
     return;
@@ -33,24 +38,38 @@ void WebPage::processDoc(const int &pos, const int &pageLength) {
   unique_ptr<char[]> buf(new char[pageLength + 1]());
   ifs.read(buf.get(), pageLength);
 
+  _doc = buf.get();
   XMLDocument xmlDocument;
   xmlDocument.Parse(buf.get());
   XMLElement *node = xmlDocument.FirstChildElement("doc");
-  if (node->FirstChildElement("docid")->GetText() &&
-      node->FirstChildElement("title")->GetText() &&
-      node->FirstChildElement("link")->GetText() &&
-      node->FirstChildElement("content")->GetText()) {
-    _docID = std::stoi(node->FirstChildElement("docid")->GetText());
-    // cerr << "id = " << _docID << '\n';
-    _doc = buf.get();
-    // cerr << "doc = " << _doc << '\n';
-    _docTitle = node->FirstChildElement("title")->GetText();
-    // cerr << "title = " << _docTitle << '\n';
-    _docURL = node->FirstChildElement("link")->GetText();
-    // cerr << "URL = " << _docURL << '\n';
-    _docContent = node->FirstChildElement("content")->GetText();
-    // cerr << "content = " << _docContent << '\n';
+  if (node->FirstChildElement("docid")) {
+    if (node->FirstChildElement("docid")->GetText()) {
+      _docID = std::stoi(node->FirstChildElement("docid")->GetText());
+    }
   }
+  if (node->FirstChildElement("title")) {
+    if (node->FirstChildElement("title")->GetText()) {
+      _docTitle = node->FirstChildElement("title")->GetText();
+    }
+  }
+  if (node->FirstChildElement("link")) {
+    if (node->FirstChildElement("link")->GetText()) {
+      _docURL = node->FirstChildElement("link")->GetText();
+    }
+  }
+  if (node->FirstChildElement("content")) {
+    if (node->FirstChildElement("content")->GetText()) {
+      _docContent = node->FirstChildElement("content")->GetText();
+    }
+  }
+  // cerr << "id = " << _docID << '\n';
+  // cerr << "doc = " << _doc << '\n';
+
+  // cerr << "title = " << _docTitle << '\n';
+
+  // cerr << "URL = " << _docURL << '\n';
+
+  // cerr << "content = " << _docContent << '\n';
   ifs.close();
 }
 

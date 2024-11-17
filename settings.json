@@ -28,7 +28,8 @@
       "page.lib": "../lib/page.dat",
       "offset.lib": "../lib/offset.dat",
       "dpage.lib": "../lib/dpage.dat",
-      "doffset.lib": "../lib/doffset.dat"
+      "doffset.lib": "../lib/doffset.dat",
+      "invert.lib": "../lib/invert.dat"
     }
   },
   "network": {
