@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Page</title>
+    <link rel="stylesheet" href="./static/mdui.css">
+    <script src="./static/mdui.global.js"></script>
+    <!-- Filled -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<!-- Outlined -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+<!-- Rounded -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+<!-- Sharp -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+
+<!-- Two Tone -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Two+Tone" rel="stylesheet">
+</head>
+
+<body class="mdui-theme-light mdui-theme-accent-blue mdui-loaded ">
+    <mdui-layout style='height: 100vh;'>
+        <mdui-layout-main>
+            <div class="zc-container" style="border-radius: 15px;">
+                <div class="mdui-row">
+                    <h1>搜索引擎</h1><!--<div class="mdui-typo-title">最新项目</div>-->
+                    <br />
+                    <mdui-text-field variant="filled" label="搜索" placeholder='键入以搜索' id="searchInput" clearable>
+                        <mdui-button-icon slot="icon" icon="search" onclick="sendSearchRequest()"></mdui-button-icon>
+                    </mdui-text-field>
+                    <div style="padding-top: 10px;">
+                        <mdui-button name="search" onclick="sendSearchRequest()">搜索</mdui-button>
+                    </div>
+                    <div id="scratch_box">
+                        <mdui-tabs value="new" id="scratch_type">
+                            <mdui-tab value="hot" icon="whatshot">最热</mdui-tab>
+                        </mdui-tabs>
+
+                        <div class="mdui-row" id="scratch_projects"></div>
+                        <div style="display:flex; justify-content:center;">
+                            <div id="scratch_change_page"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </mdui-layout-main></mdui-layout>
+        <script>
+            function sendSearchRequest() {
+            const query = document.getElementById('searchInput').value;
+            if (query) {
+                // 使用 fetch 发送 HTTP GET 请求
+                fetch(`/search?q=${encodeURIComponent(query)}`, {
+                    method: 'GET',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Search Results:', data);
+                    alert('Search request sent successfully!');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error sending search request.');
+                });
+            } else {
+                alert('Please enter a search term.');
+            }
+        }
+        </script>
+</body>

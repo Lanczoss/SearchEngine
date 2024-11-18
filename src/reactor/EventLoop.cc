@@ -77,7 +77,7 @@ void EventLoop::waitEpollFd() {
     perror("epoll_wait error in waitEpollFd");
     return;
   } else if (0 == nready) {
-    cout << ">>epoll wait timeout once!" << endl;
+    // cout << ">>epoll wait timeout once!" << endl;
   } else {
     // main logic
     // manual resize

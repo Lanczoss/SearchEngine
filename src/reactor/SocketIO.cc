@@ -2,10 +2,13 @@
 
 #include <errno.h>
 #include <stdio.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
 #include <iostream>
+
+#include "ProtocolParser.h"
 using std::cout;
 using std::endl;
 
@@ -60,47 +63,27 @@ int SocketIO::writen(const char *buf, int length) {
   return length - remind;
 }
 
-int SocketIO::readLine(void *buf, int length) {
+int SocketIO::readHttp(void *buf) {
   // length created by buf
   // last must be '\0'
-  int remind = length - 1;
   char *pstr = static_cast<char *>(buf);
-  ssize_t ret, total = 0;
+  ssize_t ret;
 
-  while (remind > 0) {
-    ret = recv(_netSock.getFd(), buf, remind, MSG_PEEK);
-    if (ret == -1 && errno == EINTR) {
-      continue;
-    } else if (ret == -1) {
-      perror("recv in readLine");
-      return -1;
-    } else if (ret == 0) {
-      cout << "disconnected by peer" << endl;
-      break;
-    } else {
-      for (ssize_t idx = 0; idx < ret; ++idx) {
-        if (pstr[idx] == '\n') {
-          // I just need one line
-          int realSize = idx + 1;
-          readn(pstr, realSize);
-          pstr += realSize;
-          *pstr = '\0';
-
-          return total + realSize;
-        }
-      }
-
-      // if not got '\n'
-      // continue copy
-      readn(pstr, ret);
-      total += ret;
-      pstr += ret;
-      remind -= ret;
-    }
+  ret = recv(_netSock.getFd(), buf, 65535, MSG_PEEK);
+  if (ret == -1 && errno == EINTR) {
+    cerr << "EINTR\n";
+  } else if (ret == -1) {
+    perror("recv in readLine");
+    return -1;
+  } else if (ret == 0) {
+    cout << "disconnected by peer" << endl;
+    return -1;
   }
+  cerr << pstr;
+  readn(pstr, ret);
+  pstr += ret;
   *pstr = '\0';
-
-  return total - remind;
+  return 0;
 }
 
 int SocketIO::fd() const { return _netSock.getFd(); }

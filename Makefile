@@ -7,11 +7,11 @@ OBJS:=$(patsubst %.cc, %.o, $(SRCS))
 OBJSS:=$(patsubst %.cc, %.o, $(SRCSS))
 TESTOBJS:=$(patsubst %.cc, %.o, $(TESTS))
 TEST:= test.exe
-SERVER:= SearchEngine
+SERVER:= SearchEngine.exe
 
 # 目标 : 依赖
-$(SERVER): &(OBJS)
-	g++ $^ -o $@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
+$(SERVER): ./src/ProtocolParser.o ./src/llhttp/llhttp.o ./src/llhttp/http.o ./src/llhttp/api.o ./test/16_server.o ./src/SearchEngineServer.o ./src/Configuration.o ./src/reactor/ThreadPool.o ./src/reactor/Acceptor.o ./src/reactor/SocketIO.o ./src/reactor/TaskQueue.o ./src/reactor/TcpConnection.o ./src/reactor/TcpServer.o ./src/reactor/Socket.o ./src/reactor/InetAddress.o ./src/reactor/MyTask.o ./src/reactor/EventLoop.o
+	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 	
 %.o:%.cc
 	g++ -c $^ -o $@ $(addprefix -I, $(INCLUDES)) -g

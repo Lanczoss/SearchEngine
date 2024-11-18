@@ -38,7 +38,7 @@ void SearchEngineServer::onNewConnection(const TcpConnectionPtr &con) {
 // 文件描述符可读，读客户端的数据
 void SearchEngineServer::onMessage(const TcpConnectionPtr &con) {
   string msg = con->receive();
-  cout << ">>recv msg from client: " << msg << '\n';
+  // cout << ">>recv msg from client: " << msg << '\n';
 
   // 接收到客户端的数据之后，可以将数据做业务逻辑的处理
   // add the task(msg) to threadPool

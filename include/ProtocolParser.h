@@ -13,6 +13,8 @@ using std::cerr;
 class ProtocolParser {
  public:
   static ProtocolParser* getInstance();
+  string getMethod() { return _method; }
+  string getUrl() { return _url; }
   // void init();
 
   // 解析 HTTP 数据
@@ -36,11 +38,13 @@ class ProtocolParser {
   }
 
   static int on_status(llhttp_t* parser, const char* at, size_t length) {
+    // std::cout << "status: " << std::string(at, length) << "\n";
     _status = string(at, length);
     return 0;
   }
 
   static int on_url(llhttp_t* parser, const char* at, size_t length) {
+    std::cout << "URL: " << std::string(at, length) << "\n";
     _url = string(at, length);
     return 0;
   }

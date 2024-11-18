@@ -30,11 +30,14 @@
       "dpage.lib": "../lib/dpage.dat",
       "doffset.lib": "../lib/doffset.dat",
       "invert.lib": "../lib/invert.dat"
-    }
+    },
+    "index": "../www/index.html",
+    "css": "../www/static/mdui.css",
+    "js": "../www/static/mdui.global.js"
   },
   "network": {
     "tcp": {
-      "ip": "127.0.0.1",
+      "ip": "192.168.2.29",
       "port": "12345"
     },
     "pool": {

@@ -88,3 +88,12 @@ string Configuration::page(const char* purpose, const char* key) {
     return value;
   }
 }
+string Configuration::page(const char* key) {
+  auto value = _settings["page"][key];
+  if (value == nullptr) {
+    cerr << "settings.json is not correct!\n";
+    return "wrong";
+  } else {
+    return value;
+  }
+}

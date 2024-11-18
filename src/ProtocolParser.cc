@@ -35,8 +35,8 @@ void ProtocolParser::initReady() {
 int ProtocolParser::parse(const std::string& data) {
   enum llhttp_errno err = llhttp_execute(&_parser, data.c_str(), data.size());
   if (err != HPE_OK) {
-    fprintf(stderr, "Parse error: %s %s\n", llhttp_errno_name(err),
-            _parser.reason);
+    // fprintf(stderr, "Parse error: %s %s\n", llhttp_errno_name(err),
+    // _parser.reason);
     return -1;
   }
   llhttp_init(&_parser, HTTP_BOTH, &_settings);

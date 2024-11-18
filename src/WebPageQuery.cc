@@ -199,33 +199,32 @@ vector<WebPage> WebPageQuery::doQuery(const string &key) {
   }
 
   // 根据相似度排序
-  std::sort(readyDocids.begin(), readyDocids.end(),
-            [base, &docidWeights](const int &lhs, const int &rhs) {
-              // 比较两个docid的余弦值
-              double lcosUpNumber = 0;
-              double lcosDownFirstNumber = 0;
-              double lcosDownSecondNumber = 0;
-              double rcosUpNumber = 0;
-              double rcosDownFirstNumber = 0;
-              double rcosDownSecondNumber = 0;
-              // 一个docid
-              for (size_t idx = 0; idx < base.size(); ++idx) {
-                lcosUpNumber += base[idx] * docidWeights[lhs][idx];
-                lcosDownFirstNumber += std::abs(base[idx] * base[idx]);
-                lcosDownSecondNumber +=
-                    std::abs(docidWeights[lhs][idx] * docidWeights[lhs][idx]);
-                rcosUpNumber += base[idx] * docidWeights[rhs][idx];
-                rcosDownFirstNumber += std::abs(base[idx] * base[idx]);
-                rcosDownSecondNumber +=
-                    std::abs(docidWeights[rhs][idx] * docidWeights[rhs][idx]);
-              }
-              // 计算最终值
-              double dlhs = lcosUpNumber / (sqrt(lcosDownFirstNumber) *
-                                            sqrt(lcosDownSecondNumber));
-              double drhs = rcosUpNumber / (sqrt(rcosDownFirstNumber) *
-                                            sqrt(rcosDownSecondNumber));
-              return dlhs > drhs;
-            });
+  std::sort(
+      readyDocids.begin(), readyDocids.end(),
+      [base, &docidWeights](const int &lhs, const int &rhs) {
+        // 比较两个docid的余弦值
+        double lcosUpNumber = 0;
+        double lcosDownFirstNumber = 0;
+        double lcosDownSecondNumber = 0;
+        double rcosUpNumber = 0;
+        double rcosDownFirstNumber = 0;
+        double rcosDownSecondNumber = 0;
+        // 一个docid
+        for (size_t idx = 0; idx < base.size(); ++idx) {
+          lcosUpNumber += base[idx] * docidWeights[lhs][idx];
+          lcosDownFirstNumber += base[idx] * base[idx];
+          lcosDownSecondNumber +=
+              docidWeights[lhs][idx] * docidWeights[lhs][idx];
+          rcosUpNumber += base[idx] * docidWeights[rhs][idx];
+          rcosDownFirstNumber += base[idx] * base[idx];
+          rcosDownSecondNumber +=
+              docidWeights[rhs][idx] * docidWeights[rhs][idx];
+        }
+        // 计算最终值
+        double dlhs = lcosUpNumber / lcosDownFirstNumber * lcosDownSecondNumber;
+        double drhs = rcosUpNumber / rcosDownFirstNumber * rcosDownSecondNumber;
+        return dlhs > drhs;
+      });
 
   // 返回前十个
   vector<WebPage> readyWebPages;

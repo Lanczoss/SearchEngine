@@ -15,6 +15,11 @@ class MyTask {
   void process();
 
  private:
+  void responseIndex();
+  void responseCss();
+  void responseJs();
+
+ private:
   string _msg;
   TcpConnectionPtr _con;
 };
