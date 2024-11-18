@@ -54,6 +54,13 @@ $(SERVER): &(OBJS)
 
 13_pageDedup.exe: ./test/13_pageDedup.o ./src/WebPage.o ./src/PageLibPreprocessor.o ./src/Configuration.o ./src/tinyxml2.o ./src/SplitToolCppJieba.o ./src/SplitTool.o
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
+
+14_dpage.exe: ./test/14_dpage.o ./src/Configuration.o 
+	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
+
+15_webPageQuery.exe: ./test/15_webPageQuery.o ./src/Configuration.o ./src/SplitTool.o ./src/SplitToolCppJieba.o ./src/WebPageQuery.o ./src/WebPage.o ./src/tinyxml2.o
+	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
+
 echo:
 	echo $(INCLUDES)
 	echo $(SRCS)

@@ -13,6 +13,6 @@ int main() {
 
   Dictionary::getInstance()->init();
   // Dictionary::getInstance()->doQuery("中国");
-  KeyRecommander kr("hello");
+  KeyRecommander kr("你好中国");
   // kr.doQuery();
 }

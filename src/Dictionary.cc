@@ -188,9 +188,8 @@ void Dictionary::queryIndex(vector<int>& unionSet, const string& inputWord) {
       if (flag == false) {
         vector<int> copySet = unionSet;
         unionSet.clear();
-        std::set_intersection(copySet.begin(), copySet.end(),
-                              temp->second.begin(), temp->second.end(),
-                              std::back_inserter(unionSet));
+        std::set_union(copySet.begin(), copySet.end(), temp->second.begin(),
+                       temp->second.end(), std::back_inserter(unionSet));
       } else {
         for (auto& value : temp->second) {
           unionSet.push_back(value);

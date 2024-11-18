@@ -116,7 +116,7 @@ void PageLibPreprocessor::buildInvertIndexMap() {
     line.erase(line.find_last_not_of(" \n\r\t") + 1);  // 去掉末尾空白符
     stopWords.insert(line);
   }
-  // 存储单词，包含该单词文章的集合，文章id，文章次数
+  // 存储单词，包含该单词文章的集合，文章id，在文章中出现的次数
   map<string, set<pair<int, int>>> calculateMap;
   WebPage wp(Configuration::getInstance()->page("save", "dpage.lib"));
   // 遍历偏移库
@@ -127,6 +127,7 @@ void PageLibPreprocessor::buildInvertIndexMap() {
     // 使用jieba进行分词
     vector<string> cutWords = _wordCutter->cut(wp.getDocContent());
 
+    // 过滤之后的存储
     map<string, int> freq;
     // 过滤停用词
     for (auto& word : cutWords) {
@@ -161,22 +162,27 @@ void PageLibPreprocessor::buildInvertIndexMap() {
   // 计算权重
   // 需要某个单词在一篇文章中出现的次数
   // 需要包含该单词的文章数量
+  // 文章总数
   int pageSumNumber = _offsetLib.size();
   unordered_map<string, set<pair<int, double>>> weightMap;
-  double wSquaresSum = 0;
+  // 某文章中所有单词权重的平方和
+  unordered_map<int, double> wSquaresSum;
+  // 遍历一篇文章的所有单词
+  // 计算他们的权重
   for (auto& cal : calculateMap) {
-    // 一个单词
+    // 一个单词的文章集合
     for (auto& set : cal.second) {
+      // 一个文章id
       double temp = calWeight(set.second, cal.second.size(), pageSumNumber);
       weightMap[cal.first].insert(std::make_pair(set.first, temp));
-      wSquaresSum += temp * temp;
+      wSquaresSum[set.first] += temp * temp;
     }
   }
   // 归一化
   for (auto& cal : weightMap) {
     for (auto& set : cal.second) {
       double temp = set.second;
-      temp /= sqrt(wSquaresSum);
+      temp /= sqrt(wSquaresSum[set.first]);
       _invertIndexLib[cal.first].insert(std::make_pair(set.first, temp));
     }
   }
