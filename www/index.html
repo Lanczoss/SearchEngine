@@ -76,11 +76,11 @@
                 })
                     .then(response => response.json())
                     .then(data => {
+                        document.getElementById('insertPages').innerHTML = '';
                         data.forEach(article => {
                             const [title, url, content] = article;
                             // 获取容器元素
                             const container = document.getElementById('insertPages');
-                            container.innerHTML = '';
                             const articleI1tem = document.createElement('mdui-collapse-item');
 
                             const articleL1Item = document.createElement('mdui-list-item');

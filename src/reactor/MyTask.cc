@@ -24,9 +24,13 @@ MyTask::~MyTask() {}
 
 void MyTask::process() {
   // mission main logic!!!!!!!!!!
-  ProtocolParser::getInstance()->parse(_msg);
-  string method = ProtocolParser::getInstance()->getMethod();
-  string url = ProtocolParser::getInstance()->getUrl();
+  ProtocolParser pp;
+  if (pp.parse(_msg) == 0) {
+    // 解析错误
+    responseError();
+  }
+  string method = pp.getMethod();
+  string url = pp.getUrl();
   if (method == "GET") {
     if (url == "/" || url == "/search") {
       responseIndex();
@@ -35,7 +39,7 @@ void MyTask::process() {
     } else if (url == "/static/mdui.global.js") {
       responseJs();
     } else if (url.substr(0, 8) == "/search?") {
-      responseRecommand();
+      responseRecommand(url);
     } else {
       // 这里回复一个404
       responseError();
@@ -43,7 +47,7 @@ void MyTask::process() {
     // thread(threadPool) informs EventLoop that msg processed
   } else if (method == "POST") {
     if (url.substr(0, 9) == "/suggest?") {
-      responseCandidate();
+      responseCandidate(url);
     } else {
       responseError();
     }
@@ -128,16 +132,16 @@ void MyTask::responseJs() {
   _con->sendToLoop(_msg);
 }
 
-void MyTask::responseRecommand() {
-  string searchKey = ProtocolParser::getInstance()->getUrl().substr(10);
+void MyTask::responseRecommand(const string &url) {
+  string searchKey = url.substr(10);
   searchKey = urlDecode(searchKey);
   // cerr << searchKey << '\n';
   WebPageSearcher wps(searchKey, _con);
   wps.doQuery();
 }
 
-void MyTask::responseCandidate() {
-  string canKey = ProtocolParser::getInstance()->getUrl().substr(11);
+void MyTask::responseCandidate(const string &url) {
+  string canKey = url.substr(11);
   canKey = urlDecode(canKey);
   // cerr << canKey << '\n';
   KeyRecommander kr(canKey, _con);

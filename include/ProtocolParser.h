@@ -12,7 +12,6 @@ using std::cerr;
 
 class ProtocolParser {
  public:
-  static ProtocolParser* getInstance();
   string getMethod() { return _method; }
   string getUrl() { return _url; }
   // void init();
@@ -20,14 +19,7 @@ class ProtocolParser {
   // 解析 HTTP 数据
   int parse(const std::string& data);
 
- private:
   ProtocolParser();
-  ~ProtocolParser();
-  ProtocolParser(const ProtocolParser& rhs) = delete;
-  ProtocolParser& operator=(const ProtocolParser& rhs) = delete;
-
-  static void destory();
-  static void initReady();
 
  private:
   // 回调函数
@@ -44,7 +36,7 @@ class ProtocolParser {
   }
 
   static int on_url(llhttp_t* parser, const char* at, size_t length) {
-    //std::cout << "URL: " << std::string(at, length) << "\n";
+    // std::cout << "URL: " << std::string(at, length) << "\n";
     _url = string(at, length);
     return 0;
   }
@@ -63,9 +55,6 @@ class ProtocolParser {
  private:
   llhttp_t _parser;
   llhttp_settings_t _settings;
-
-  static ProtocolParser* _pInstance;
-  static pthread_once_t _once;
 };
 
 #endif  // !PROTOCOL_PARSER_H_

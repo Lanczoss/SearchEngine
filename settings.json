@@ -43,7 +43,7 @@
     },
     "pool": {
       "number": "10",
-      "queue.size": "1024"
+      "queue.size": "10"
     }
   }
 }

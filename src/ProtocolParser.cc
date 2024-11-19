@@ -3,8 +3,6 @@ string ProtocolParser::_method;
 string ProtocolParser::_url;
 string ProtocolParser::_status;
 string ProtocolParser::_body;
-ProtocolParser* ProtocolParser::_pInstance = getInstance();
-pthread_once_t ProtocolParser::_once = PTHREAD_ONCE_INIT;
 
 ProtocolParser::ProtocolParser() : _parser(), _settings() {
   llhttp_init(&_parser, HTTP_BOTH, &_settings);
@@ -20,32 +18,13 @@ ProtocolParser::ProtocolParser() : _parser(), _settings() {
   // _settings.on_message_complete = on_message_complete;
 }
 
-ProtocolParser::~ProtocolParser() {}
-
-ProtocolParser* ProtocolParser::getInstance() {
-  pthread_once(&_once, initReady);
-  return _pInstance;
-}
-
-void ProtocolParser::initReady() {
-  _pInstance = new ProtocolParser();
-  atexit(destory);
-}
-
 int ProtocolParser::parse(const std::string& data) {
   enum llhttp_errno err = llhttp_execute(&_parser, data.c_str(), data.size());
   if (err != HPE_OK) {
-    // fprintf(stderr, "Parse error: %s %s\n", llhttp_errno_name(err),
-    // _parser.reason);
-    return -1;
+    fprintf(stderr, "Parse error: %s %s\n", llhttp_errno_name(err),
+            _parser.reason);
+    return 0;
   }
   llhttp_init(&_parser, HTTP_BOTH, &_settings);
-  return 0;
-}
-
-void ProtocolParser::destory() {
-  if (_pInstance) {
-    delete _pInstance;
-    _pInstance = nullptr;
-  }
+  return 1;
 }

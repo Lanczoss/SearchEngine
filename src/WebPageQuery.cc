@@ -96,6 +96,9 @@ vector<WebPage> WebPageQuery::doQuery(const string &key) {
     }
   }
 
+  if (readyWords.empty()) {
+    return vector<WebPage>();
+  }
   // 取交集专用
   // 这里只取docid
   vector<int> readyDocids;

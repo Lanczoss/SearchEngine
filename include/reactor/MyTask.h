@@ -19,9 +19,9 @@ class MyTask {
   void responseIndex();
   void responseCss();
   void responseJs();
-  void responseRecommand();
+  void responseRecommand(const string &);
   void responseError();
-  void responseCandidate();
+  void responseCandidate(const string &);
 
  private:
   string _msg;
