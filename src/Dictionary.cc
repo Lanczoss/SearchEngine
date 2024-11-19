@@ -41,7 +41,9 @@ void Dictionary::destory() {
 }
 
 Dictionary::Dictionary(const string& dictPath, const string& indexPath)
-    : _dictPath(dictPath), _indexPath(indexPath) {}
+    : _dictPath(dictPath), _indexPath(indexPath) {
+  init();
+}
 
 void Dictionary::showDict() {
   for (size_t idx = 0; idx < 10; ++idx) {

@@ -13,11 +13,15 @@ class MyTask {
   MyTask(const string &msg, const TcpConnectionPtr &);
   ~MyTask();
   void process();
+  string urlDecode(const string &);
 
  private:
   void responseIndex();
   void responseCss();
   void responseJs();
+  void responseRecommand();
+  void responseError();
+  void responseCandidate();
 
  private:
   string _msg;

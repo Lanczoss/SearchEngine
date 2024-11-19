@@ -10,7 +10,7 @@ class Webpage;
 
 class WebPageSearcher {
  public:
-  WebPageSearcher(const string &sought);
+  WebPageSearcher(const string &sought, const TcpConnectionPtr &conn);
   void doQuery();
 
  private:

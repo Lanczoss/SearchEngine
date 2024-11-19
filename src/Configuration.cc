@@ -2,8 +2,12 @@
 
 #include <fstream>
 #include <iostream>
+#include <vector>
+
+#include "WebPage.h"
 using std::cerr;
 using std::ifstream;
+using std::vector;
 
 // 对静态数据成员的定义
 // nlohmann::json* Configuration::_settings = nullptr;
@@ -96,4 +100,20 @@ string Configuration::page(const char* key) {
   } else {
     return value;
   }
+}
+
+string Configuration::createPages(vector<WebPage> vec) {
+  nlohmann::json jp;
+  for (auto& web : vec) {
+    jp.push_back({web.getTitle(), web.getUrl(), web.getDocContent()});
+  }
+  return jp.dump();
+}
+
+string Configuration::createWords(vector<string> vec) {
+  nlohmann::json jp;
+  for (auto& word : vec) {
+    jp.push_back(word);
+  }
+  return jp.dump();
 }

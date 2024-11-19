@@ -8,19 +8,19 @@
     <link rel="stylesheet" href="./static/mdui.css">
     <script src="./static/mdui.global.js"></script>
     <!-- Filled -->
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-<!-- Outlined -->
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <!-- Outlined -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 
-<!-- Rounded -->
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Rounded -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
-<!-- Sharp -->
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <!-- Sharp -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
 
-<!-- Two Tone -->
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Two+Tone" rel="stylesheet">
+    <!-- Two Tone -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Two+Tone" rel="stylesheet">
 </head>
 
 <body class="mdui-theme-light mdui-theme-accent-blue mdui-loaded ">
@@ -30,11 +30,20 @@
                 <div class="mdui-row">
                     <h1>搜索引擎</h1><!--<div class="mdui-typo-title">最新项目</div>-->
                     <br />
-                    <mdui-text-field variant="filled" label="搜索" placeholder='键入以搜索' id="searchInput" clearable>
-                        <mdui-button-icon slot="icon" icon="search" onclick="sendSearchRequest()"></mdui-button-icon>
+
+
+                    <mdui-text-field oninput="dropdownListen()" label="搜索" placeholder='键入以搜索' id="searchInput"
+                        clearable>
                     </mdui-text-field>
+                    <!-- <mdui-dropdown> -->
+                    <mdui-menu id="dropmenu">
+                        <!-- <mdui-menu-item>Item 1</mdui-menu-item>
+                            <mdui-menu-item>Item 2</mdui-menu-item> -->
+                    </mdui-menu>
+                    <!-- </mdui-dropdown> -->
                     <div style="padding-top: 10px;">
-                        <mdui-button name="search" onclick="sendSearchRequest()">搜索</mdui-button>
+                        <mdui-button icon="search" id="searchButton" name="search"
+                            onclick="sendSearchRequest()">搜索</mdui-button>
                     </div>
                     <div id="scratch_box">
                         <mdui-tabs value="new" id="scratch_type">
@@ -50,27 +59,114 @@
                 </div>
 
             </div>
+
+            <mdui-list>
+                <mdui-collapse id="insertPages" accordion>
+
+                </mdui-collapse>
+            </mdui-list>
         </mdui-layout-main></mdui-layout>
-        <script>
-            function sendSearchRequest() {
+    <script>
+        function sendSearchRequest() {
             const query = document.getElementById('searchInput').value;
             if (query) {
                 // 使用 fetch 发送 HTTP GET 请求
                 fetch(`/search?q=${encodeURIComponent(query)}`, {
                     method: 'GET',
                 })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Search Results:', data);
-                    alert('Search request sent successfully!');
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error sending search request.');
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(article => {
+                            const [title, url, content] = article;
+                            // 获取容器元素
+                            const container = document.getElementById('insertPages');
+                            container.innerHTML = '';
+                            const articleI1tem = document.createElement('mdui-collapse-item');
+
+                            const articleL1Item = document.createElement('mdui-list-item');
+                            articleL1Item.slot = "header";
+                            articleL1Item.icon = "near_me";
+                            articleL1Item.textContent = title;
+
+
+                            const articleD1Item = document.createElement('div');
+                            articleD1Item.style = "margin-left: 2.5rem";
+
+                            const titleItem = document.createElement('mdui-list-item');
+                            titleItem.textContent = content;
+                            titleItem.target = "_blank";
+                            titleItem.href = url;
+
+
+                            articleD1Item.appendChild(titleItem);
+
+                            articleI1tem.appendChild(articleD1Item);
+                            articleI1tem.appendChild(articleL1Item);
+
+
+
+                            // 将文章容器插入到主容器中
+                            container.appendChild(articleI1tem);
+
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('未查询到结果');
+                    });
             } else {
                 alert('Please enter a search term.');
             }
         }
-        </script>
+
+        function debounce(fn, delay) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => fn.apply(this, args), delay);
+            };
+        }
+
+        function dropdownListen() {
+            // 获取文本框和下拉组件
+            const textBox = document.getElementById('searchInput');
+
+            // 防抖后的处理函数
+            const debouncedFetch = debounce(function (query) {
+                // 发送 fetch 请求
+                fetch(`/suggest?s=${encodeURIComponent(query)}`, {
+                    method: 'POST',
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // 清空之前的菜单
+                        const container = document.getElementById('dropmenu');
+                        container.innerHTML = '';
+
+                        // 添加新的菜单项
+                        data.forEach(article => {
+                            const articleItem = document.createElement('mdui-menu-item');
+                            articleItem.textContent = article;
+                            container.appendChild(articleItem);
+                        });
+                    })
+                    .catch(err => console.error('Fetch error:', err));
+            }, 2000); // 延迟 2000 毫秒
+
+            const inputHandler = function () {
+                const query = this.value.trim();
+                if (query == '') {
+                    document.getElementById('dropmenu').innerHTML = '';
+                } else {
+                    debouncedFetch(query);
+                }
+            };
+
+            textBox.removeEventListener('input', inputHandler);
+
+            
+
+            textBox.addEventListener('input', inputHandler);
+        }
+    </script>
 </body>

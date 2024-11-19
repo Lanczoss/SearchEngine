@@ -79,7 +79,7 @@ int SocketIO::readHttp(void *buf) {
     cout << "disconnected by peer" << endl;
     return -1;
   }
-  cerr << pstr;
+  // cerr << pstr;
   readn(pstr, ret);
   pstr += ret;
   *pstr = '\0';

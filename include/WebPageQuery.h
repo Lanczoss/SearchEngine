@@ -22,7 +22,8 @@ class WebPage;
 
 class WebPageQuery {
  public:
-  WebPageQuery(SplitTool* tool);
+  WebPageQuery();
+  ~WebPageQuery();
   vector<WebPage> doQuery(const string& key);
 
  private:

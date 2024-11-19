@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "CandidateResult.h"
+#include "reactor/TcpServer.h"
 using std::priority_queue;
 using std::string;
 using std::vector;
@@ -22,8 +23,8 @@ struct CompareCandidate {
 
 class KeyRecommander {
  public:
-  KeyRecommander(const string& word);
-  string doQuery();
+  KeyRecommander(const string& word, const TcpConnectionPtr& con);
+  void doQuery();
 
  private:
   void showPrique();
@@ -32,6 +33,7 @@ class KeyRecommander {
   string _sought;
   priority_queue<CandidateResult, vector<CandidateResult>, CompareCandidate>
       _prique;
+  TcpConnectionPtr _con;
 };
 
 #endif  // !KEY_RECOMMANDER_H_

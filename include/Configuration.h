@@ -4,9 +4,13 @@
 #include <pthread.h>
 
 #include <string>
+#include <vector>
 
+#include "CandidateResult.h"
+#include "WebPage.h"
 #include "nlohmann/json.hpp"
 using std::string;
+using std::vector;
 
 // 单例模式的配置类
 class Configuration {
@@ -17,6 +21,9 @@ class Configuration {
   string page(const char* purpose, const char* key);
   string page(const char* key);
   void init(const string& configFilePath);
+
+  string createPages(vector<WebPage>);
+  string createWords(vector<string>);
 
  private:
   Configuration();

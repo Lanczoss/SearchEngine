@@ -10,7 +10,7 @@ TEST:= test.exe
 SERVER:= SearchEngine.exe
 
 # 目标 : 依赖
-$(SERVER): ./src/ProtocolParser.o ./src/llhttp/llhttp.o ./src/llhttp/http.o ./src/llhttp/api.o ./test/16_server.o ./src/SearchEngineServer.o ./src/Configuration.o ./src/reactor/ThreadPool.o ./src/reactor/Acceptor.o ./src/reactor/SocketIO.o ./src/reactor/TaskQueue.o ./src/reactor/TcpConnection.o ./src/reactor/TcpServer.o ./src/reactor/Socket.o ./src/reactor/InetAddress.o ./src/reactor/MyTask.o ./src/reactor/EventLoop.o
+$(SERVER): ./src/KeyRecommander.o ./src/CandidateResult.o ./src/Dictionary.o ./src/SplitToolCppJieba.o ./src/SplitTool.o ./src/WebPage.o ./src/WebPageQuery.o ./src/tinyxml2.o ./src/WebPageSearcher.o ./src/ProtocolParser.o ./src/llhttp/llhttp.o ./src/llhttp/http.o ./src/llhttp/api.o ./test/16_server.o ./src/SearchEngineServer.o ./src/Configuration.o ./src/reactor/ThreadPool.o ./src/reactor/Acceptor.o ./src/reactor/SocketIO.o ./src/reactor/TaskQueue.o ./src/reactor/TcpConnection.o ./src/reactor/TcpServer.o ./src/reactor/Socket.o ./src/reactor/InetAddress.o ./src/reactor/MyTask.o ./src/reactor/EventLoop.o
 	g++ $^ -o ./bin/$@ $(LIBS) $(addprefix -I, $(INCLUDES)) -g
 	
 %.o:%.cc

@@ -7,6 +7,7 @@
 
 #include "Configuration.h"
 #include "SplitTool.h"
+#include "SplitToolCppJieba.h"
 #include "WebPage.h"
 
 using std::cerr;
@@ -16,10 +17,12 @@ using std::istringstream;
 // 先读取去重网页偏移库
 // 倒排索引库
 // 停用词
-WebPageQuery::WebPageQuery(SplitTool *tool)
-    : _offsetLib(), _invertIndexLib(), _wordCutTool(tool) {
+WebPageQuery::WebPageQuery()
+    : _offsetLib(), _invertIndexLib(), _wordCutTool(new SplitToolCppJieba()) {
   loadLib();
 }
+
+WebPageQuery::~WebPageQuery() { delete _wordCutTool; }
 
 void WebPageQuery::loadLib() {
   // 读取去重网页偏移库
@@ -81,17 +84,6 @@ vector<WebPage> WebPageQuery::doQuery(const string &key) {
     bool flag = true;
     // 如果单词非空
     if (!word.empty()) {
-      // 跳过单字节
-      for (size_t idx = 0; idx < word.size();) {
-        int count = nBytesCode(word[idx]);
-        if (count == 1) {
-          flag = false;
-          break;
-        }
-        idx += count;
-      }
-      // cerr << word << '\n';
-      // cerr << (_stopWords.find(word) == _stopWords.end()) << '\n';
       // 过滤停用词
       if (flag && _stopWords.find(word) == _stopWords.end()) {
         // cerr << word << '\n';
@@ -104,9 +96,6 @@ vector<WebPage> WebPageQuery::doQuery(const string &key) {
     }
   }
 
-  // for (auto &i : readyWords) {
-  //   cerr << i.first << '\n';
-  // }
   // 取交集专用
   // 这里只取docid
   vector<int> readyDocids;
@@ -115,9 +104,6 @@ vector<WebPage> WebPageQuery::doQuery(const string &key) {
     readyDocids.push_back(ready.first);
   }
 
-  // for (auto &d : ddocidIntersection) {
-  //   cerr << d << '\n';
-  // }
   // 计算一个句子的向量
   // 这里是文章总数加上句子数
   // 句子也当成一个page
@@ -155,9 +141,6 @@ vector<WebPage> WebPageQuery::doQuery(const string &key) {
     oneWord *= ready.second;
     sentenceMap.insert({ready.first, oneWord});
   }
-  // for (auto &m : sentenceMap) {
-  //   cerr << m.first << ", base = " << m.second << '\n';
-  // }
   double sentenceSquares = 0;
   for (auto &s : sentenceMap) {
     // 计算基准向量
@@ -169,15 +152,6 @@ vector<WebPage> WebPageQuery::doQuery(const string &key) {
     // 这里是归一化
     base.push_back(sentenceMap[ready.first] / sqrt(sentenceSquares));
   }
-  // for (auto &d : readyDocids) {
-  //   cerr << "交集 = " << d << '\n';
-  // }
-  //
-  // for (auto &b : base) {
-  //   cerr << "base = " << b << " ";
-  // }
-  // cerr << '\n';
-
   // 现在得到了单词的docid交集
   // 取出每个docid的权重组成向量
   // 余弦相似算法计算相似度
@@ -226,6 +200,7 @@ vector<WebPage> WebPageQuery::doQuery(const string &key) {
         return dlhs > drhs;
       });
 
+  cerr << "readyDocids = " << readyDocids.size() << '\n';
   // 返回前十个
   vector<WebPage> readyWebPages;
   for (size_t idx = 0; idx < 10 && idx < readyDocids.size(); ++idx) {

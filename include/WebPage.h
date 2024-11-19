@@ -12,6 +12,8 @@ class WebPage {
   string getDocContent();
   void clear();
   size_t getPageLength();
+  string getUrl();
+  string getTitle();
 
   // 处理录入的文章
   void processDoc(const int &pos, const int &pageLength);

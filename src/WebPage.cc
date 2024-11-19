@@ -78,3 +78,7 @@ string WebPage::getDoc() { return _doc; }
 int WebPage::getDocID() { return _docID; }
 
 string WebPage::getDocContent() { return _docContent; }
+
+string WebPage::getUrl() { return _docURL; }
+
+string WebPage::getTitle() { return _docTitle; }

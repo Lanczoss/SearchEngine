@@ -44,7 +44,7 @@ class ProtocolParser {
   }
 
   static int on_url(llhttp_t* parser, const char* at, size_t length) {
-    std::cout << "URL: " << std::string(at, length) << "\n";
+    //std::cout << "URL: " << std::string(at, length) << "\n";
     _url = string(at, length);
     return 0;
   }
