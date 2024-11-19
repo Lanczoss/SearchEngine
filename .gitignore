@@ -1,8 +1,6 @@
 # Prerequisites
 *.d
 bin/
-dict.txt
-index.txt
 page.txt
 
 # Compiled Object files
