@@ -16,9 +16,9 @@ class MyTask {
   string urlDecode(const string &);
 
  private:
-  void responseIndex();
-  void responseCss();
-  void responseJs();
+  void responseIndex(const string &);
+  void responseCss(const string &);
+  void responseJs(const string &);
   void responseRecommand(const string &);
   void responseError();
   void responseCandidate(const string &);

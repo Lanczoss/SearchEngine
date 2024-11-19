@@ -83,6 +83,27 @@ string Configuration::network(const char* purpose, const char* key) {
     return value;
   }
 }
+
+string Configuration::cache(const char* purpose, const char* key) {
+  auto value = _settings["cache"][purpose][key];
+  if (value == nullptr) {
+    cerr << "settings.json is not correct!\n";
+    return "wrong";
+  } else {
+    return value;
+  }
+}
+
+string Configuration::cache(const char* key) {
+  auto value = _settings["cache"][key];
+  if (value == nullptr) {
+    cerr << "settings.json is not correct!\n";
+    return "wrong";
+  } else {
+    return value;
+  }
+}
+
 string Configuration::page(const char* purpose, const char* key) {
   auto value = _settings["page"][purpose][key];
   if (value == nullptr) {

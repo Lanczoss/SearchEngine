@@ -38,12 +38,20 @@
   },
   "network": {
     "tcp": {
-      "ip": "192.168.2.29",
+      "ip": "172.28.97.159",
       "port": "12345"
     },
     "pool": {
       "number": "10",
       "queue.size": "10"
     }
+  },
+  "cache": {
+    "save": {
+      "server": "../lib/server.cache.dat"
+    },
+    "size": "100",
+    "redis.ip": "127.0.0.1",
+    "redis.port": "6379"
   }
 }

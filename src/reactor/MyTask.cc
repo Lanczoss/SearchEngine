@@ -5,6 +5,8 @@
 #include <fstream>
 #include <iostream>
 #include <memory>
+
+#include "RedisServer.h"
 using std::unique_ptr;
 
 #include "Configuration.h"
@@ -13,8 +15,6 @@ using std::unique_ptr;
 #include "WebPageSearcher.h"
 #include "reactor/TcpConnection.h"
 using std::cerr;
-using std::cout;
-using std::endl;
 using std::ifstream;
 
 MyTask::MyTask(const string &msg, const TcpConnectionPtr &con)
@@ -31,13 +31,14 @@ void MyTask::process() {
   }
   string method = pp.getMethod();
   string url = pp.getUrl();
+  RedisServer rs;
   if (method == "GET") {
     if (url == "/" || url == "/search") {
-      responseIndex();
+      responseIndex(url);
     } else if (url == "/static/mdui.css") {
-      responseCss();
+      responseCss(url);
     } else if (url == "/static/mdui.global.js") {
-      responseJs();
+      responseJs(url);
     } else if (url.substr(0, 8) == "/search?") {
       responseRecommand(url);
     } else {
@@ -56,79 +57,92 @@ void MyTask::process() {
   }
 }
 
-void MyTask::responseIndex() {
-  // 先回复一个HTML
-  ifstream ifs(Configuration::getInstance()->page("index"));
-  if (!ifs) {
-    cerr << "open index.html failed!\n";
-    return;
+void MyTask::responseIndex(const string &url) {
+  RedisServer rs;
+  if (!rs.get(url, _msg)) {
+    // 先回复一个HTML
+    ifstream ifs(Configuration::getInstance()->page("index"));
+    if (!ifs) {
+      cerr << "open index.html failed!\n";
+      return;
+    }
+    // string page;
+    auto pageLength =
+        std::filesystem::file_size(Configuration::getInstance()->page("index"));
+    unique_ptr<char[]> page(new char[pageLength + 1]());
+    ifs.read(page.get(), pageLength);
+    _msg =
+        "HTTP/1.1 200 OK\r\n"
+        "Content-Type: text/html; charset=UTF-8\r\n"
+        "Content-Length: " +
+        std::to_string(pageLength) +
+        "\r\n"
+        "Connection: keep-alive\r\n"
+        "\r\n";
+    _msg.append(page.get());
+    rs.put(url, _msg);
+    // cout << _msg;
+    ifs.close();
   }
-  // string page;
-  auto pageLength =
-      std::filesystem::file_size(Configuration::getInstance()->page("index"));
-  unique_ptr<char[]> page(new char[pageLength + 1]());
-  ifs.read(page.get(), pageLength);
-  _msg =
-      "HTTP/1.1 200 OK\r\n"
-      "Content-Type: text/html; charset=UTF-8\r\n"
-      "Content-Length: " +
-      std::to_string(pageLength) +
-      "\r\n"
-      "Connection: keep-alive\r\n"
-      "\r\n";
-  _msg.append(page.get());
-  // cout << _msg;
-  ifs.close();
   _con->sendToLoop(_msg);
 }
 
-void MyTask::responseCss() {
-  ifstream ifs(Configuration::getInstance()->page("css"));
-  if (!ifs) {
-    cerr << "open index.html failed!\n";
-    return;
+void MyTask::responseCss(const string &url) {
+  RedisServer rs;
+  if (!rs.get(url, _msg)) {
+    ifstream ifs(Configuration::getInstance()->page("css"));
+    if (!ifs) {
+      cerr << "open index.html failed!\n";
+      return;
+    }
+    // string page;
+    auto pageLength =
+        std::filesystem::file_size(Configuration::getInstance()->page("css"));
+    unique_ptr<char[]> page(new char[pageLength + 1]());
+    ifs.read(page.get(), pageLength);
+    _msg =
+        "HTTP/1.1 200 OK\r\n"
+        "Content-Type: text/css; charset=UTF-8\r\n"
+        "Content-Length: " +
+        std::to_string(pageLength) +
+        "\r\n"
+        "Connection: keep-alive\r\n"
+        "\r\n";
+    _msg.append(page.get());
+    // cout << _msg;
+    rs.put(url, _msg);
+
+    ifs.close();
   }
-  // string page;
-  auto pageLength =
-      std::filesystem::file_size(Configuration::getInstance()->page("css"));
-  unique_ptr<char[]> page(new char[pageLength + 1]());
-  ifs.read(page.get(), pageLength);
-  _msg =
-      "HTTP/1.1 200 OK\r\n"
-      "Content-Type: text/css; charset=UTF-8\r\n"
-      "Content-Length: " +
-      std::to_string(pageLength) +
-      "\r\n"
-      "Connection: keep-alive\r\n"
-      "\r\n";
-  _msg.append(page.get());
-  // cout << _msg;
-  ifs.close();
   _con->sendToLoop(_msg);
 }
 
-void MyTask::responseJs() {
-  ifstream ifs(Configuration::getInstance()->page("js"));
-  if (!ifs) {
-    cerr << "open index.html failed!\n";
-    return;
+void MyTask::responseJs(const string &url) {
+  RedisServer rs;
+  if (!rs.get(url, _msg)) {
+    ifstream ifs(Configuration::getInstance()->page("js"));
+    if (!ifs) {
+      cerr << "open index.html failed!\n";
+      return;
+    }
+    // string page;
+    auto pageLength =
+        std::filesystem::file_size(Configuration::getInstance()->page("js"));
+    unique_ptr<char[]> page(new char[pageLength + 1]());
+    ifs.read(page.get(), pageLength);
+    _msg =
+        "HTTP/1.1 200 OK\r\n"
+        "Content-Type: text/js; charset=UTF-8\r\n"
+        "Content-Length: " +
+        std::to_string(pageLength) +
+        "\r\n"
+        "Connection: keep-alive\r\n"
+        "\r\n";
+    _msg.append(page.get());
+    rs.put(url, _msg);
+    // cout << _msg;
+    ifs.close();
   }
-  // string page;
-  auto pageLength =
-      std::filesystem::file_size(Configuration::getInstance()->page("js"));
-  unique_ptr<char[]> page(new char[pageLength + 1]());
-  ifs.read(page.get(), pageLength);
-  _msg =
-      "HTTP/1.1 200 OK\r\n"
-      "Content-Type: text/js; charset=UTF-8\r\n"
-      "Content-Length: " +
-      std::to_string(pageLength) +
-      "\r\n"
-      "Connection: keep-alive\r\n"
-      "\r\n";
-  _msg.append(page.get());
-  // cout << _msg;
-  ifs.close();
   _con->sendToLoop(_msg);
 }
 

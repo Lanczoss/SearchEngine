@@ -20,6 +20,8 @@ class Configuration {
   string network(const char* purpose, const char* key);
   string page(const char* purpose, const char* key);
   string page(const char* key);
+  string cache(const char* purpose, const char* key);
+  string cache(const char* key);
   void init(const string& configFilePath);
 
   string createPages(vector<WebPage>);
