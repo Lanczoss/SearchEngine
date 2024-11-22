@@ -71,6 +71,7 @@ void MyTask::responseIndex(const string &url) {
         std::filesystem::file_size(Configuration::getInstance()->page("index"));
     unique_ptr<char[]> page(new char[pageLength + 1]());
     ifs.read(page.get(), pageLength);
+    //cerr << "send once\n"; 
     _msg =
         "HTTP/1.1 200 OK\r\n"
         "Content-Type: text/html; charset=UTF-8\r\n"
@@ -149,7 +150,7 @@ void MyTask::responseJs(const string &url) {
 void MyTask::responseRecommand(const string &url) {
   string searchKey = url.substr(10);
   searchKey = urlDecode(searchKey);
-  // cerr << searchKey << '\n';
+  //cerr << searchKey << '\n';
   WebPageSearcher wps(searchKey, _con);
   wps.doQuery();
 }
@@ -157,7 +158,7 @@ void MyTask::responseRecommand(const string &url) {
 void MyTask::responseCandidate(const string &url) {
   string canKey = url.substr(11);
   canKey = urlDecode(canKey);
-  // cerr << canKey << '\n';
+  cerr << canKey << '\n';
   KeyRecommander kr(canKey, _con);
   kr.doQuery();
 }

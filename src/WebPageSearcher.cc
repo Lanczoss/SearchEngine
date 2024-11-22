@@ -19,18 +19,20 @@ void WebPageSearcher::doQuery() {
   if (!rs.get(_sought, msg)) {
     // 没有找到
     WebPageQuery wpq;
-    string pages =
-        Configuration::getInstance()->createPages(wpq.doQuery(_sought));
-
+    vector<WebPage> pages = wpq.doQuery(_sought);
+    nlohmann::json jp;
+    for (auto &web : pages) {
+      jp.push_back({web.getTitle(), web.getUrl(), web.getDocContent()});
+    }
     string msg =
         "HTTP/1.1 200 OK\r\n"
         "Content-Type: application/json; charset=UTF-8\r\n"
         "Content-Length: " +
-        std::to_string(pages.size()) +
+        std::to_string(jp.dump().size()) +
         "\r\n"
         "Connection: keep-alive\r\n"
         "\r\n";
-    msg.append(pages);
+    msg.append(jp.dump());
     // cout << _msg;
 
     // 添加到redis中

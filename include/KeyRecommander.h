@@ -24,7 +24,9 @@ struct CompareCandidate {
 class KeyRecommander {
  public:
   KeyRecommander(const string& word, const TcpConnectionPtr& con);
+  // KeyRecommander(const string& word);
   void doQuery();
+  // string doQuery(const string &word);
 
  private:
   void showPrique();

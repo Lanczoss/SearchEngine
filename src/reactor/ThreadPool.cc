@@ -1,6 +1,8 @@
 #include "reactor/ThreadPool.h"
 
 #include <iostream>
+
+#include "CacheManager.h"
 using std::cout;
 using std::endl;
 

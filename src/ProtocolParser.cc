@@ -25,6 +25,5 @@ int ProtocolParser::parse(const std::string& data) {
             _parser.reason);
     return 0;
   }
-  llhttp_init(&_parser, HTTP_BOTH, &_settings);
   return 1;
 }

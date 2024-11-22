@@ -9,7 +9,7 @@ class SocketIO {
   ~SocketIO();
   int readn(void *buf, int length);
   int writen(const char *buf, int length);
-  int readHttp(void *buf);
+  int readHttp(void *buf, int len);
   int fd() const;
 
  private:

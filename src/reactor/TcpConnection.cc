@@ -22,7 +22,8 @@ void TcpConnection::send(const string &msg) {
 
 string TcpConnection::receive() {
   char buf[65535] = {0};
-  _sockIO.readHttp(buf);
+  _sockIO.readHttp(buf, 65534);
+  //cout << "once = " << buf << '\n';
   return buf;
 }
 
